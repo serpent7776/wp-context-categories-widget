@@ -86,8 +86,13 @@ class context_category_widget_class extends WP_Widget {
 			);
 			$cat_main = get_categories($opts_main);
 			if (count($cat_main) > 0) {
-				$link = get_category_link($cat_id);
-				$title = '<a href="' . esc_url($link) . '" title="' . esc_attr($cat_main[0]->cat_name) . '">' . esc_html($cat_main[0]->cat_name) . '</a>';
+				$current_cat = get_query_var('cat');
+				if ($current_cat != $cat_id) {
+					$link = get_category_link($cat_id);
+					$title = '<a href="' . esc_url($link) . '" title="' . esc_attr($cat_main[0]->cat_name) . '">' . esc_html($cat_main[0]->cat_name) . '</a>';
+				} else {
+					$title = esc_html($cat_main[0]->cat_name);
+				}
 			}
 		}
 		//
