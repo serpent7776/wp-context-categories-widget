@@ -52,12 +52,13 @@ class context_category_widget_class extends WP_Widget {
 		$show_post_count = (!empty($instance['show_post_count'])) ? $instance['show_post_count'] : 1;
 		$cat_id = 0;
 		if (is_category() || is_single()) {
-			$categories = get_the_category();
-			for ($i = 0; $i < count($categories); $i++) {
-				if (isset($categories[$i]) && $categories[$i]->category_parent == 0) {
-					$cat_id = $categories[$i]->cat_ID;
+			$category = get_the_category()[0];
+			while (isset($category) && isset($category->cat_ID)) {
+				if ($category->category_parent == 0) {
+					$cat_id = $category->cat_ID;
 					break;
 				}
+				$category = get_category($category->category_parent);
 			}
 		}
 		$opts_childs = array(
