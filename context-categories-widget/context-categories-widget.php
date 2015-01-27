@@ -138,7 +138,7 @@ class context_category_widget_class extends WP_Widget {
 <p>
 	<label><span>Default category:</span>
 	<select id="<?php echo $this->get_field_id('default_category'); ?>" name="<?php echo $this->get_field_name('default_category'); ?>">
-		<option value="-0"<?php if($default_category == 0) { ?> selected="selected"<?php } ?>>Top categories</option>
+		<option value="0"<?php if($default_category == 0) { ?> selected="selected"<?php } ?>>Top categories</option>
 		<?php foreach ($categories as $cat) { ?>
 		<option value="<?php echo $cat->term_id ?>"<?php if ($default_category == $cat->term_id) { ?> selected="selected"<?php } ?>><?php echo $cat->name ?></option>
 		<?php } ?>
