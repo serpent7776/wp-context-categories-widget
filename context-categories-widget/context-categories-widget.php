@@ -52,7 +52,8 @@ class context_category_widget_class extends WP_Widget {
 		$show_post_count = (!empty($instance['show_post_count'])) ? $instance['show_post_count'] : 1;
 		$cat_id = 0;
 		if (is_category() || is_single()) {
-			$category = get_the_category()[0];
+			$category = get_the_category();
+			$category = $category[0];
 			while (isset($category) && isset($category->cat_ID)) {
 				if ($category->category_parent == 0) {
 					$cat_id = $category->cat_ID;
