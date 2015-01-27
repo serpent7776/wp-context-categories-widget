@@ -49,6 +49,7 @@ class context_category_widget_class extends WP_Widget {
 	public function widget($args, $instance) {
 		$title = (!empty($instance['title'])) ? apply_filters('widget_title', $instance['title']) : 'Categories';
 		$max_depth = (!empty($instance['max_depth'])) ? $instance['max_depth'] : 1;
+		$default_category = (!empty($instance['default_category'])) ? $instance['default_category'] : 0;
 		$show_post_count = (!empty($instance['show_post_count'])) ? $instance['show_post_count'] : 1;
 		$cat_id = 0;
 		if (is_category() || is_single()) {
@@ -61,6 +62,9 @@ class context_category_widget_class extends WP_Widget {
 				}
 				$category = get_category($category->category_parent);
 			}
+		}
+		if ($cat_id == 0) {
+			$cat_id = $default_category;
 		}
 		$opts_childs = array(
 			'orderby' => 'term_group',
@@ -113,6 +117,8 @@ class context_category_widget_class extends WP_Widget {
 		$title = (!empty($instance['title'])) ? $instance['title'] : 'Categories';
 		$max_depth = (!empty($instance['max_depth'])) ? $instance['max_depth'] : 1;
 		$show_post_count = (isset($instance['show_post_count'])) ? (bool)$instance['show_post_count'] : true;
+		$default_category = (isset($instance['default_category'])) ? $instance['default_category'] : 0;
+		$categories = get_categories(array('type' => 'post', 'hide_empty' => 1, 'orderby' => 'name', 'order' => 'ASC', 'taxonomy' => 'category'));
 ?>
 <p>
 	<label><span>Title:</span>
@@ -122,6 +128,16 @@ class context_category_widget_class extends WP_Widget {
 <p>
 	<label><span>Max depth:</span>
 	<input type="number" required id="<?php echo $this->get_field_id('max_depth') ?>" name="<?php echo $this->get_field_name('max_depth') ?>" class="widefat" value="<?php echo esc_attr($max_depth) ?>">
+	</label>
+</p>
+<p>
+	<label><span>Default category:</span>
+	<select id="<?php echo $this->get_field_id('default_category'); ?>" name="<?php echo $this->get_field_name('default_category'); ?>">
+		<option value="-0"<?php if($default_category == 0) { ?> selected="selected"<?php } ?>>Top categories</option>
+		<?php foreach ($categories as $cat) { ?>
+		<option value="<?php echo $cat->term_id ?>"<?php if ($default_category == $cat->term_id) { ?> selected="selected"<?php } ?>><?php echo $cat->name ?></option>
+		<?php } ?>
+	</select>
 	</label>
 </p>
 <p>
@@ -137,6 +153,7 @@ class context_category_widget_class extends WP_Widget {
 		$instance = array();
 		$instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
 		$instance['max_depth'] = (!empty($new_instance['max_depth']) && is_numeric($new_instance['max_depth'])) ? $new_instance['max_depth'] : 1;
+		$instance['default_category'] = (!empty($new_instance['default_category'])) ? $new_instance['default_category'] : 0;
 		$instance['show_post_count'] = (!empty($new_instance['show_post_count']) && is_numeric($new_instance['show_post_count'])) ? (bool)$new_instance['show_post_count'] : false;
 		return $instance;
 	}
